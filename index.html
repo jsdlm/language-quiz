@@ -121,6 +121,19 @@
     .feedback.ok { color: var(--correct); font-weight: 600; }
     .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
+    #tip {
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: #13161f;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    #tip::before { content: '💡 '; }
+
     #next-btn {
       background: var(--accent);
       color: #fff;
@@ -146,6 +159,7 @@
     <div class="question">Dans quelle langue est ce texte ?</div>
     <div class="choices" id="choices"></div>
     <div class="feedback" id="feedback"></div>
+    <div id="tip"></div>
     <button id="next-btn" disabled>Suivant →</button>
   </div>
 
@@ -155,6 +169,7 @@
     const sampleEl   = document.getElementById('sample');
     const choicesEl  = document.getElementById('choices');
     const feedbackEl = document.getElementById('feedback');
+    const tipEl      = document.getElementById('tip');
     const nextBtn    = document.getElementById('next-btn');
 
     function shuffle(arr) {
@@ -231,6 +246,8 @@
     function renderQuestion({ lang, distractors, text }) {
       feedbackEl.textContent = '';
       feedbackEl.className   = 'feedback';
+      tipEl.style.display    = 'none';
+      tipEl.textContent      = '';
       nextBtn.disabled       = true;
       choicesEl.innerHTML    = '';
 
@@ -309,6 +326,11 @@
         choicesEl.querySelectorAll('.choice').forEach(b => {
           if (b.dataset.lang === correct) b.classList.add('reveal');
         });
+        const correctLang = LANGUAGES.find(l => l.name === correct);
+        if (correctLang?.tip) {
+          tipEl.textContent   = correctLang.tip;
+          tipEl.style.display = 'block';
+        }
       }
 
       nextBtn.disabled = false;
