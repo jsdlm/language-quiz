@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz des Écritures</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --card: #1a1d27;
+      --border: #2e3248;
+      --text: #e8eaf6;
+      --muted: #8b90a8;
+      --accent: #7c83f5;
+      --correct: #4caf7d;
+      --wrong: #e05c5c;
+      --btn-hover: #2a2d3e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 560px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sample {
+      text-align: center;
+      font-size: 2.4rem;
+      line-height: 1.5;
+      min-height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-radius: 10px;
+      background: #13161f;
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .question {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .choice {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.12s, border-color 0.12s;
+      font-family: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .choice:hover:not(:disabled) {
+      background: var(--btn-hover);
+      border-color: var(--accent);
+    }
+
+    .choice:disabled { cursor: default; }
+
+    .choice-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .choice-countries {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .choice.correct .choice-countries,
+    .choice.reveal .choice-countries { color: inherit; opacity: 0.75; }
+    .choice.wrong .choice-countries { color: inherit; opacity: 0.75; }
+
+    .choice.correct {
+      background: rgba(76, 175, 125, 0.15);
+      border-color: var(--correct);
+      color: var(--correct);
+    }
+
+    .choice.wrong {
+      background: rgba(224, 92, 92, 0.12);
+      border-color: var(--wrong);
+      color: var(--wrong);
+    }
+
+    .choice.reveal {
+      background: rgba(76, 175, 125, 0.08);
+      border-color: var(--correct);
+      color: var(--correct);
+    }
+
+    .feedback {
+      text-align: center;
+      font-size: 0.95rem;
+      min-height: 1.4rem;
+      color: var(--muted);
+    }
+
+    .feedback.ok { color: var(--correct); font-weight: 600; }
+    .feedback.ko { color: var(--wrong); font-weight: 600; }
+
+    #next-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.12s;
+    }
+
+    #next-btn:hover { opacity: 0.85; }
+    #next-btn:disabled { opacity: 0.3; cursor: default; }
+  </style>
+</head>
+<body>
+  <h1>Reconnais l'écriture</h1>
+  <div class="card">
+    <div class="sample" id="sample"></div>
+    <div class="question">Dans quelle langue est ce texte ?</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="next-btn" disabled>Suivant →</button>
+  </div>
+
+  <script>
+    const LANGUAGES = [
+      // — Langues romanes —
+      {
+        name: "Espagnol",
+        countries: ["Espagne", "Mexique", "Argentine"],
+        examples: ["¡Hola mundo!", "¿Cómo estás hoy?", "Me gusta aprender idiomas", "El cielo está muy azul hoy", "Muchas gracias por todo"]
+      },
+      {
+        name: "Italien",
+        countries: ["Italie", "Suisse"],
+        examples: ["Ciao mondo", "Oggi il tempo è bellissimo", "Mi piace imparare le lingue", "Roma è la capitale d'Italia", "Grazie mille per tutto"]
+      },
+
+      // — Cyrillique occidental (Europe de l'Est) —
+      {
+        name: "Russe",
+        countries: ["Russie", "Kazakhstan", "Biélorussie"],
+        examples: ["Привет мир", "Сегодня хорошая погода", "Я изучаю русский язык", "Москва — столица России", "Спасибо большое"]
+      },
+      {
+        name: "Ukrainien",
+        countries: ["Ukraine"],
+        examples: ["Привіт світе", "Сьогодні гарна погода", "Я вивчаю українську мову", "Київ — столиця України", "Дякую вам щиро"]
+      },
+      {
+        name: "Biélorusse",
+        countries: ["Biélorussie"],
+        examples: ["Прывітанне свет", "Сёння надвор'е добрае", "Я вучу беларускую мову", "Мінск — сталіца Беларусі", "Дзякуй вам вельмі"]
+      },
+      {
+        name: "Bulgare",
+        countries: ["Bulgarie"],
+        examples: ["Здравей свят", "Днес времето е хубаво", "Уча се на български език", "София е столицата на България", "Благодаря ви много"]
+      },
+      {
+        name: "Serbe",
+        countries: ["Serbie", "Bosnie-Herzégovine"],
+        examples: ["Здраво свете", "Данас је лепо време", "Учим српски језик", "Београд је главни град Србије", "Хвала вам пуно"]
+      },
+      {
+        name: "Macédonien",
+        countries: ["Macédoine du Nord"],
+        examples: ["Здраво свету", "Денес убаво е времето", "Учам македонски јазик", "Скопје е главен град", "Благодарам многу"]
+      },
+
+      // — Latin (Europe de l'Est) —
+      {
+        name: "Polonais",
+        countries: ["Pologne"],
+        examples: ["Witaj świecie", "Dziś jest ładna pogoda", "Uczę się języka polskiego", "Warszawa jest stolicą Polski", "Dziękuję bardzo serdecznie"]
+      },
+      {
+        name: "Tchèque",
+        countries: ["République tchèque"],
+        examples: ["Ahoj světe", "Dnes je hezké počasí", "Učím se česky mluvit", "Praha je hlavní město Česka", "Děkuji vám mnohokrát"]
+      },
+      {
+        name: "Roumain",
+        countries: ["Roumanie", "Moldavie"],
+        examples: ["Bună ziua lume", "Astăzi vremea este frumoasă", "Învăț limba română acum", "București este capitala României", "Mulțumesc foarte mult"]
+      },
+      {
+        name: "Hongrois",
+        countries: ["Hongrie", "Roumanie", "Slovaquie"],
+        examples: ["Helló világ", "Ma nagyon szép az idő", "Magyar nyelvet tanulok most", "Budapest Magyarország fővárosa", "Köszönöm szépen nagyon"]
+      },
+
+      // — Autres alphabets —
+      {
+        name: "Grec",
+        countries: ["Grèce", "Chypre"],
+        examples: ["Γεια σου κόσμε", "Σήμερα ο καιρός είναι ωραίος", "Μαθαίνω ελληνικά", "Η Αθήνα είναι η πρωτεύουσα", "Ευχαριστώ πολύ"]
+      },
+
+      // — Abjads (droite à gauche) —
+      {
+        name: "Arabe",
+        countries: ["Égypte", "Arabie Saoudite", "Maroc"],
+        examples: ["مرحبا بالعالم", "كيف حالك اليوم؟", "الشمس تشرق كل يوم", "أنا أحب القراءة والكتابة", "السماء زرقاء جميلة"]
+      },
+      {
+        name: "Hébreu",
+        countries: ["Israël"],
+        examples: ["שלום עולם", "מזג האוויר טוב היום", "אני לומד עברית", "תל אביב עיר יפה", "תודה רבה לך"]
+      },
+
+      // — Asie de l'Est —
+      {
+        name: "Chinois",
+        countries: ["Chine", "Taïwan", "Singapour"],
+        examples: ["你好世界", "今天天气很好", "我喜欢学习语言", "北京是中国的首都", "这是一个测试"]
+      },
+      {
+        name: "Japonais",
+        countries: ["Japon"],
+        examples: ["こんにちは世界", "今日はいい天気ですね", "私は日本語を勉強しています", "東京は大きな都市です", "ありがとうございます"]
+      },
+      {
+        name: "Coréen",
+        countries: ["Corée du Sud", "Corée du Nord"],
+        examples: ["안녕하세요", "오늘 날씨가 좋네요", "한국어를 배우고 있어요", "서울은 한국의 수도입니다", "감사합니다"]
+      },
+      {
+        name: "Mongol",
+        countries: ["Mongolie"],
+        examples: ["Сайн байна уу дэлхий", "Өнөөдөр цаг агаар сайхан", "Би монгол хэл сурч байна", "Улаанбаатар нийслэл хот юм", "Баярлалаа"]
+      },
+
+      // — Asie du Sud —
+      {
+        name: "Hindi",
+        countries: ["Inde"],
+        examples: ["नमस्ते दुनिया", "आज मौसम अच्छा है", "मैं हिंदी सीख रहा हूँ", "दिल्ली भारत की राजधानी है", "बहुत धन्यवाद"]
+      },
+      {
+        name: "Bengali",
+        countries: ["Bangladesh", "Inde"],
+        examples: ["হ্যালো বিশ্ব", "আজকের আবহাওয়া ভালো", "আমি বাংলা শিখছি", "ঢাকা বাংলাদেশের রাজধানী", "ধন্যবাদ"]
+      },
+      {
+        name: "Tamoul",
+        countries: ["Inde", "Sri Lanka"],
+        examples: ["வணக்கம் உலகம்", "இன்று வானிலை நல்லது", "நான் தமிழ் கற்றுக்கொள்கிறேன்", "சென்னை ஒரு பெரிய நகரம்", "நன்றி"]
+      },
+      {
+        name: "Télougou",
+        countries: ["Inde"],
+        examples: ["హలో ప్రపంచం", "నేడు వాతావరణం మంచిగా ఉంది", "నేను తెలుగు నేర్చుకుంటున్నాను", "హైదరాబాద్ పెద్ద నగరం", "ధన్యవాదాలు"]
+      },
+      {
+        name: "Gujarati",
+        countries: ["Inde"],
+        examples: ["હેલો વિશ્વ", "આજે હવામાન સારું છે", "હું ગુજરાતી શીખી રહ્યો છું", "અમદાવાદ એક મોટું શહેર છે", "આભાર"]
+      },
+
+      // — Asie du Sud-Est —
+      {
+        name: "Thaï",
+        countries: ["Thaïlande"],
+        examples: ["สวัสดีชาวโลก", "วันนี้อากาศดีมาก", "ฉันกำลังเรียนภาษาไทย", "กรุงเทพเป็นเมืองหลวง", "ขอบคุณมาก"]
+      },
+      {
+        name: "Khmer",
+        countries: ["Cambodge"],
+        examples: ["សួស្តីពិភពលោក", "ថ្ងៃនេះអាកាសធាតុល្អ", "ខ្ញុំកំពុងរៀនភាសាខ្មែរ", "ភ្នំពេញជារាជធានី", "អរគុណ"]
+      },
+
+      // — Autres —
+    ];
+
+    const sampleEl = document.getElementById('sample');
+    const choicesEl = document.getElementById('choices');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pick(arr, n) {
+      return shuffle(arr).slice(0, n);
+    }
+
+    function newQuestion() {
+      feedbackEl.textContent = '';
+      feedbackEl.className = 'feedback';
+      nextBtn.disabled = true;
+      choicesEl.innerHTML = '';
+
+      const correctLang = LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)];
+      const example = correctLang.examples[Math.floor(Math.random() * correctLang.examples.length)];
+      sampleEl.textContent = example;
+
+      const distractors = pick(LANGUAGES.filter(l => l.name !== correctLang.name), 3);
+      const options = shuffle([correctLang, ...distractors]);
+
+      options.forEach(lang => {
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.dataset.lang = lang.name;
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'choice-name';
+        nameEl.textContent = lang.name;
+
+        const countriesEl = document.createElement('span');
+        countriesEl.className = 'choice-countries';
+        countriesEl.textContent = lang.countries.join(', ');
+
+        btn.appendChild(nameEl);
+        btn.appendChild(countriesEl);
+        btn.addEventListener('click', () => answer(btn, lang.name, correctLang.name));
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function answer(clicked, chosen, correct) {
+      const allBtns = choicesEl.querySelectorAll('.choice');
+      allBtns.forEach(b => b.disabled = true);
+
+      if (chosen === correct) {
+        clicked.classList.add('correct');
+        feedbackEl.textContent = '✓ Correct !';
+        feedbackEl.className = 'feedback ok';
+      } else {
+        clicked.classList.add('wrong');
+        feedbackEl.textContent = `✗ C'était du ${correct}`;
+        feedbackEl.className = 'feedback ko';
+        allBtns.forEach(b => {
+          if (b.dataset.lang === correct) b.classList.add('reveal');
+        });
+      }
+
+      nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener('click', newQuestion);
+
+    newQuestion();
+  </script>
+</body>
+</html>
