@@ -112,7 +112,7 @@
     .feedback.ok { color: var(--correct); font-weight: 600; }
     .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
-    .sample .highlight { color: #fbbf24; font-weight: 700; }
+    ::highlight(quiz-hl) { color: #fbbf24; font-weight: 700; }
 
     #tip {
       font-size: 1rem;
@@ -249,12 +249,22 @@
       return cut.slice(0, cut.lastIndexOf(' ')) + '…';
     }
 
-    function highlightChars(text, chars) {
-      if (!chars) return null;
-      return [...text].map(c => {
-        const esc = c.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return chars.includes(c) ? `<span class="highlight">${esc}</span>` : esc;
-      }).join('');
+    function applyHighlight(chars) {
+      CSS.highlights?.delete('quiz-hl');
+      if (!chars || !CSS.highlights) return;
+      const textNode = sampleEl.firstChild;
+      if (!textNode) return;
+      const text = textNode.textContent;
+      const ranges = [];
+      for (let i = 0; i < text.length; i++) {
+        if (chars.includes(text[i])) {
+          const r = new Range();
+          r.setStart(textNode, i);
+          r.setEnd(textNode, i + 1);
+          ranges.push(r);
+        }
+      }
+      if (ranges.length) CSS.highlights.set('quiz-hl', new Highlight(...ranges));
     }
 
     async function fetchWikiText(lang) {
@@ -287,6 +297,7 @@
     }
 
     function renderQuestion({ lang, distractors, text }) {
+      CSS.highlights?.delete('quiz-hl');
       feedbackEl.textContent = '';
       feedbackEl.className   = 'feedback';
       tipEl.style.display    = 'none';
@@ -376,8 +387,7 @@
         }
       }
 
-      const hl = highlightChars(sampleEl.textContent, correctLang?.chars ?? null);
-      if (hl !== null) sampleEl.innerHTML = hl;
+      applyHighlight(correctLang?.chars ?? null);
 
       nextBtn.disabled = false;
     }
