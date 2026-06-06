@@ -122,7 +122,7 @@
     .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
     #tip {
-      font-size: 0.82rem;
+      font-size: 0.9rem;
       color: var(--muted);
       background: #13161f;
       border: 1px solid var(--border);
@@ -321,8 +321,7 @@
         feedbackEl.className   = 'feedback ok';
       } else {
         clicked.classList.add('wrong');
-        feedbackEl.textContent = `✗ C'était du ${correct}`;
-        feedbackEl.className   = 'feedback ko';
+        feedbackEl.className   = 'feedback';
         choicesEl.querySelectorAll('.choice').forEach(b => {
           if (b.dataset.lang === correct) b.classList.add('reveal');
         });
