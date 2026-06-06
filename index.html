@@ -150,81 +150,7 @@
   </div>
 
   <script>
-    const LANGUAGES = [
-      // — Romanes —
-      { name: "Espagnol",   countries: ["Espagne","Mexique","Argentine"],        wiki: "es", group: "latin-west"      },
-      { name: "Portugais",  countries: ["Portugal","Brésil","Açores"],           wiki: "pt", group: "latin-west"      },
-      { name: "Italien",    countries: ["Italie","Saint-Marin","Suisse"],        wiki: "it", group: "latin-west"      },
-
-      // — Germaniques —
-      { name: "Allemand",   countries: ["Allemagne","Autriche","Suisse"],        wiki: "de", group: "latin-west"      },
-      { name: "Néerlandais",countries: ["Pays-Bas","Curaçao"],                   wiki: "nl", group: "latin-west"      },
-
-      // — Nordiques —
-      { name: "Norvégien",  countries: ["Norvège"],                              wiki: "no", group: "latin-nordic"    },
-      { name: "Suédois",    countries: ["Suède","Åland"],                        wiki: "sv", group: "latin-nordic"    },
-      { name: "Danois",     countries: ["Danemark","Groenland"],                 wiki: "da", group: "latin-nordic"    },
-      { name: "Finnois",    countries: ["Finlande"],                             wiki: "fi", group: "latin-nordic"    },
-      { name: "Islandais",  countries: ["Islande"],                              wiki: "is", group: "latin-nordic"    },
-
-      // — Baltes —
-      { name: "Letton",     countries: ["Lettonie"],                             wiki: "lv", group: "latin-baltic"    },
-      { name: "Lituanien",  countries: ["Lituanie"],                             wiki: "lt", group: "latin-baltic"    },
-      { name: "Estonien",   countries: ["Estonie"],                              wiki: "et", group: "latin-baltic"    },
-
-      // — Slaves cyrilliques —
-      { name: "Russe",      countries: ["Russie"],                               wiki: "ru", group: "cyrillic"        },
-      { name: "Ukrainien",  countries: ["Ukraine"],                              wiki: "uk", group: "cyrillic"        },
-      { name: "Bulgare",    countries: ["Bulgarie"],                             wiki: "bg", group: "cyrillic"        },
-      { name: "Serbe",      countries: ["Serbie","Bosnie-Herzégovine"],          wiki: "sr", group: "cyrillic"        },
-      { name: "Macédonien", countries: ["Macédoine du Nord"],                    wiki: "mk", group: "cyrillic"        },
-
-      // — Slaves latins —
-      { name: "Polonais",   countries: ["Pologne"],                              wiki: "pl", group: "latin-eeurope"   },
-      { name: "Tchèque",    countries: ["République tchèque"],                   wiki: "cs", group: "latin-eeurope"   },
-      { name: "Slovaque",   countries: ["Slovaquie"],                            wiki: "sk", group: "latin-eeurope"   },
-      { name: "Croate",     countries: ["Croatie"],                              wiki: "hr", group: "latin-eeurope"   },
-      { name: "Slovène",    countries: ["Slovénie"],                             wiki: "sl", group: "latin-eeurope"   },
-      { name: "Roumain",    countries: ["Roumanie","Moldavie"],                  wiki: "ro", group: "latin-eeurope"   },
-
-      // — Autres européens —
-      { name: "Hongrois",   countries: ["Hongrie","Roumanie","Slovaquie"],       wiki: "hu", group: "latin-eeurope"   },
-      { name: "Grec",       countries: ["Grèce","Chypre"],                       wiki: "el", group: "grec"            },
-      { name: "Albanais",   countries: ["Albanie"],                              wiki: "sq", group: "latin-eeurope"   },
-      { name: "Maltais",    countries: ["Malte"],                                wiki: "mt", group: "latin-eeurope"   },
-      { name: "Turc",       countries: ["Turquie"],                              wiki: "tr", group: "latin-eeurope"   },
-
-      // — Abjads —
-      { name: "Arabe",      countries: ["Égypte","Arabie Saoudite","Maroc"],     wiki: "ar", group: "abjad"           },
-      { name: "Hébreu",     countries: ["Israël"],                               wiki: "he", group: "abjad"           },
-
-      // — Asie de l'Est —
-      { name: "Chinois",    countries: ["Chine","Taïwan","Singapour"],           wiki: "zh", group: "east-asian"      },
-      { name: "Japonais",   countries: ["Japon"],                                wiki: "ja", group: "east-asian"      },
-      { name: "Coréen",     countries: ["Corée du Sud"],                         wiki: "ko", group: "east-asian"      },
-      { name: "Mongol",     countries: ["Mongolie"],                             wiki: "mn", group: "cyrillic"        },
-
-      // — Asie centrale —
-      { name: "Kazakh",     countries: ["Kazakhstan"],                           wiki: "kk", group: "cyrillic"        },
-      { name: "Kirghiz",    countries: ["Kirghizistan"],                         wiki: "ky", group: "cyrillic"        },
-
-      // — Asie du Sud —
-      { name: "Hindi",      countries: ["Inde"],                                 wiki: "hi", group: "south-asian"     },
-      { name: "Népalais",   countries: ["Népal"],                                wiki: "ne", group: "south-asian"     },
-      { name: "Bengali",    countries: ["Bangladesh","Inde"],                    wiki: "bn", group: "south-asian"     },
-      { name: "Dzongkha",   countries: ["Bhoutan"],                              wiki: "dz", group: "south-asian"     },
-      { name: "Tamoul",     countries: ["Inde"],                                 wiki: "ta", group: "south-asian"     },
-      { name: "Singhalais", countries: ["Sri Lanka"],                            wiki: "si", group: "south-asian"     },
-
-      // — Asie du Sud-Est —
-      { name: "Thaï",       countries: ["Thaïlande"],                            wiki: "th", group: "southeast-asian" },
-      { name: "Vietnamien", countries: ["Vietnam"],                              wiki: "vi", group: "latin-sea"       },
-      { name: "Laotien",    countries: ["Laos"],                                 wiki: "lo", group: "southeast-asian" },
-      { name: "Khmer",      countries: ["Cambodge"],                             wiki: "km", group: "southeast-asian" },
-      { name: "Indonésien", countries: ["Indonésie"],                            wiki: "id", group: "latin-sea"       },
-      { name: "Malais",     countries: ["Malaisie"],                             wiki: "ms", group: "latin-sea"       },
-      { name: "Filipino",   countries: ["Philippines"],                          wiki: "tl", group: "latin-sea"       },
-    ];
+    let LANGUAGES = [];
 
     const sampleEl   = document.getElementById('sample');
     const choicesEl  = document.getElementById('choices');
@@ -389,7 +315,15 @@
     }
 
     nextBtn.addEventListener('click', newQuestion);
-    newQuestion();
+
+    fetch('languages.json')
+      .then(r => r.json())
+      .then(data => { LANGUAGES = data; newQuestion(); })
+      .catch(() => {
+        sampleEl.className      = 'sample error';
+        sampleEl.style.fontSize = '0.9rem';
+        sampleEl.textContent    = 'Impossible de charger languages.json';
+      });
   </script>
 </body>
 </html>
