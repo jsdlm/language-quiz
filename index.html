@@ -112,6 +112,8 @@
     .feedback.ok { color: var(--correct); font-weight: 600; }
     .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
+    .sample .highlight { color: #fbbf24; font-weight: 700; }
+
     #tip {
       font-size: 1rem;
       color: var(--muted);
@@ -225,8 +227,10 @@
     function extractWindow(text, chars) {
       const WINDOW = 220;
       if (chars) {
-        const idx = [...text].findIndex(c => chars.includes(c));
-        if (idx !== -1) {
+        const positions = [];
+        [...text].forEach((c, i) => { if (chars.includes(c)) positions.push(i); });
+        if (positions.length > 0) {
+          const idx = positions[Math.floor(Math.random() * positions.length)];
           const start = Math.max(0, idx - 90);
           let win = text.slice(start, start + WINDOW);
           if (start > 0) {
@@ -243,6 +247,14 @@
       if (text.length <= WINDOW) return text;
       const cut = text.slice(0, WINDOW);
       return cut.slice(0, cut.lastIndexOf(' ')) + '…';
+    }
+
+    function highlightChars(text, chars) {
+      if (!chars) return null;
+      return [...text].map(c => {
+        const esc = c.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return chars.includes(c) ? `<span class="highlight">${esc}</span>` : esc;
+      }).join('');
     }
 
     async function fetchWikiText(lang) {
@@ -345,6 +357,7 @@
 
     function answer(clicked, chosen, correct) {
       choicesEl.querySelectorAll('.choice').forEach(b => b.disabled = true);
+      const correctLang = LANGUAGES.find(l => l.name === correct);
 
       if (chosen === correct) {
         clicked.classList.add('correct');
@@ -357,12 +370,14 @@
         choicesEl.querySelectorAll('.choice').forEach(b => {
           if (b.dataset.lang === correct) b.classList.add('reveal');
         });
-        const correctLang = LANGUAGES.find(l => l.name === correct);
         if (correctLang?.tip) {
           tipEl.textContent   = correctLang.tip;
           tipEl.style.display = 'block';
         }
       }
+
+      const hl = highlightChars(sampleEl.textContent, correctLang?.chars ?? null);
+      if (hl !== null) sampleEl.innerHTML = hl;
 
       nextBtn.disabled = false;
     }
