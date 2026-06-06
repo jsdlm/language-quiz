@@ -54,9 +54,8 @@
 
     .sample {
       text-align: center;
-      font-size: 2.4rem;
       line-height: 1.5;
-      min-height: 4rem;
+      min-height: 5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -64,8 +63,12 @@
       border-radius: 10px;
       background: #13161f;
       border: 1px solid var(--border);
-      word-break: break-all;
+      word-break: break-word;
+      transition: font-size 0.15s;
     }
+
+    .sample.loading { color: var(--muted); font-size: 1.6rem; letter-spacing: 0.3em; }
+    .sample.error   { color: var(--wrong); font-size: 0.9rem; }
 
     .question {
       text-align: center;
@@ -103,48 +106,20 @@
 
     .choice:disabled { cursor: default; }
 
-    .choice-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .choice-countries {
-      font-size: 0.72rem;
-      color: var(--muted);
-      line-height: 1.3;
-    }
+    .choice-name      { font-size: 0.95rem; font-weight: 600; }
+    .choice-countries { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
 
     .choice.correct .choice-countries,
-    .choice.reveal .choice-countries { color: inherit; opacity: 0.75; }
-    .choice.wrong .choice-countries { color: inherit; opacity: 0.75; }
+    .choice.reveal  .choice-countries,
+    .choice.wrong   .choice-countries { color: inherit; opacity: 0.75; }
 
-    .choice.correct {
-      background: rgba(76, 175, 125, 0.15);
-      border-color: var(--correct);
-      color: var(--correct);
-    }
+    .choice.correct { background: rgba(76,175,125,0.15); border-color: var(--correct); color: var(--correct); }
+    .choice.wrong   { background: rgba(224,92,92,0.12);  border-color: var(--wrong);   color: var(--wrong);   }
+    .choice.reveal  { background: rgba(76,175,125,0.08); border-color: var(--correct); color: var(--correct); }
 
-    .choice.wrong {
-      background: rgba(224, 92, 92, 0.12);
-      border-color: var(--wrong);
-      color: var(--wrong);
-    }
-
-    .choice.reveal {
-      background: rgba(76, 175, 125, 0.08);
-      border-color: var(--correct);
-      color: var(--correct);
-    }
-
-    .feedback {
-      text-align: center;
-      font-size: 0.95rem;
-      min-height: 1.4rem;
-      color: var(--muted);
-    }
-
+    .feedback { text-align: center; font-size: 0.95rem; min-height: 1.4rem; color: var(--muted); }
     .feedback.ok { color: var(--correct); font-weight: 600; }
-    .feedback.ko { color: var(--wrong); font-weight: 600; }
+    .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
     #next-btn {
       background: var(--accent);
@@ -160,14 +135,14 @@
       transition: opacity 0.12s;
     }
 
-    #next-btn:hover { opacity: 0.85; }
+    #next-btn:hover    { opacity: 0.85; }
     #next-btn:disabled { opacity: 0.3; cursor: default; }
   </style>
 </head>
 <body>
   <h1>Reconnais l'écriture</h1>
   <div class="card">
-    <div class="sample" id="sample"></div>
+    <div class="sample loading" id="sample">···</div>
     <div class="question">Dans quelle langue est ce texte ?</div>
     <div class="choices" id="choices"></div>
     <div class="feedback" id="feedback"></div>
@@ -176,159 +151,52 @@
 
   <script>
     const LANGUAGES = [
-      // — Langues romanes —
-      {
-        name: "Espagnol",
-        countries: ["Espagne", "Mexique", "Argentine"],
-        examples: ["¡Hola mundo!", "¿Cómo estás hoy?", "Me gusta aprender idiomas", "El cielo está muy azul hoy", "Muchas gracias por todo"]
-      },
-      {
-        name: "Italien",
-        countries: ["Italie", "Suisse"],
-        examples: ["Ciao mondo", "Oggi il tempo è bellissimo", "Mi piace imparare le lingue", "Roma è la capitale d'Italia", "Grazie mille per tutto"]
-      },
+      // — Romanes —
+      { name: "Espagnol",   countries: ["Espagne","Mexique","Argentine"],       wiki: "es" },
+      { name: "Italien",    countries: ["Italie","Suisse"],                     wiki: "it" },
 
-      // — Cyrillique occidental (Europe de l'Est) —
-      {
-        name: "Russe",
-        countries: ["Russie", "Kazakhstan", "Biélorussie"],
-        examples: ["Привет мир", "Сегодня хорошая погода", "Я изучаю русский язык", "Москва — столица России", "Спасибо большое"]
-      },
-      {
-        name: "Ukrainien",
-        countries: ["Ukraine"],
-        examples: ["Привіт світе", "Сьогодні гарна погода", "Я вивчаю українську мову", "Київ — столиця України", "Дякую вам щиро"]
-      },
-      {
-        name: "Biélorusse",
-        countries: ["Biélorussie"],
-        examples: ["Прывітанне свет", "Сёння надвор'е добрае", "Я вучу беларускую мову", "Мінск — сталіца Беларусі", "Дзякуй вам вельмі"]
-      },
-      {
-        name: "Bulgare",
-        countries: ["Bulgarie"],
-        examples: ["Здравей свят", "Днес времето е хубаво", "Уча се на български език", "София е столицата на България", "Благодаря ви много"]
-      },
-      {
-        name: "Serbe",
-        countries: ["Serbie", "Bosnie-Herzégovine"],
-        examples: ["Здраво свете", "Данас је лепо време", "Учим српски језик", "Београд је главни град Србије", "Хвала вам пуно"]
-      },
-      {
-        name: "Macédonien",
-        countries: ["Macédoine du Nord"],
-        examples: ["Здраво свету", "Денес убаво е времето", "Учам македонски јазик", "Скопје е главен град", "Благодарам многу"]
-      },
+      // — Cyrillique (Europe de l'Est) —
+      { name: "Russe",      countries: ["Russie","Kazakhstan","Biélorussie"],   wiki: "ru" },
+      { name: "Ukrainien",  countries: ["Ukraine"],                             wiki: "uk" },
+      { name: "Biélorusse", countries: ["Biélorussie"],                         wiki: "be" },
+      { name: "Bulgare",    countries: ["Bulgarie"],                            wiki: "bg" },
+      { name: "Serbe",      countries: ["Serbie","Bosnie-Herzégovine"],         wiki: "sr" },
+      { name: "Macédonien", countries: ["Macédoine du Nord"],                   wiki: "mk" },
 
-      // — Latin (Europe de l'Est) —
-      {
-        name: "Polonais",
-        countries: ["Pologne"],
-        examples: ["Witaj świecie", "Dziś jest ładna pogoda", "Uczę się języka polskiego", "Warszawa jest stolicą Polski", "Dziękuję bardzo serdecznie"]
-      },
-      {
-        name: "Tchèque",
-        countries: ["République tchèque"],
-        examples: ["Ahoj světe", "Dnes je hezké počasí", "Učím se česky mluvit", "Praha je hlavní město Česka", "Děkuji vám mnohokrát"]
-      },
-      {
-        name: "Roumain",
-        countries: ["Roumanie", "Moldavie"],
-        examples: ["Bună ziua lume", "Astăzi vremea este frumoasă", "Învăț limba română acum", "București este capitala României", "Mulțumesc foarte mult"]
-      },
-      {
-        name: "Hongrois",
-        countries: ["Hongrie", "Roumanie", "Slovaquie"],
-        examples: ["Helló világ", "Ma nagyon szép az idő", "Magyar nyelvet tanulok most", "Budapest Magyarország fővárosa", "Köszönöm szépen nagyon"]
-      },
+      // — Latin diacritique (Europe de l'Est) —
+      { name: "Polonais",   countries: ["Pologne"],                             wiki: "pl" },
+      { name: "Tchèque",    countries: ["République tchèque"],                  wiki: "cs" },
+      { name: "Roumain",    countries: ["Roumanie","Moldavie"],                 wiki: "ro" },
+      { name: "Hongrois",   countries: ["Hongrie","Roumanie","Slovaquie"],      wiki: "hu" },
 
       // — Autres alphabets —
-      {
-        name: "Grec",
-        countries: ["Grèce", "Chypre"],
-        examples: ["Γεια σου κόσμε", "Σήμερα ο καιρός είναι ωραίος", "Μαθαίνω ελληνικά", "Η Αθήνα είναι η πρωτεύουσα", "Ευχαριστώ πολύ"]
-      },
+      { name: "Grec",       countries: ["Grèce","Chypre"],                      wiki: "el" },
 
-      // — Abjads (droite à gauche) —
-      {
-        name: "Arabe",
-        countries: ["Égypte", "Arabie Saoudite", "Maroc"],
-        examples: ["مرحبا بالعالم", "كيف حالك اليوم؟", "الشمس تشرق كل يوم", "أنا أحب القراءة والكتابة", "السماء زرقاء جميلة"]
-      },
-      {
-        name: "Hébreu",
-        countries: ["Israël"],
-        examples: ["שלום עולם", "מזג האוויר טוב היום", "אני לומד עברית", "תל אביב עיר יפה", "תודה רבה לך"]
-      },
+      // — Abjads —
+      { name: "Arabe",      countries: ["Égypte","Arabie Saoudite","Maroc"],    wiki: "ar" },
+      { name: "Hébreu",     countries: ["Israël"],                              wiki: "he" },
 
       // — Asie de l'Est —
-      {
-        name: "Chinois",
-        countries: ["Chine", "Taïwan", "Singapour"],
-        examples: ["你好世界", "今天天气很好", "我喜欢学习语言", "北京是中国的首都", "这是一个测试"]
-      },
-      {
-        name: "Japonais",
-        countries: ["Japon"],
-        examples: ["こんにちは世界", "今日はいい天気ですね", "私は日本語を勉強しています", "東京は大きな都市です", "ありがとうございます"]
-      },
-      {
-        name: "Coréen",
-        countries: ["Corée du Sud", "Corée du Nord"],
-        examples: ["안녕하세요", "오늘 날씨가 좋네요", "한국어를 배우고 있어요", "서울은 한국의 수도입니다", "감사합니다"]
-      },
-      {
-        name: "Mongol",
-        countries: ["Mongolie"],
-        examples: ["Сайн байна уу дэлхий", "Өнөөдөр цаг агаар сайхан", "Би монгол хэл сурч байна", "Улаанбаатар нийслэл хот юм", "Баярлалаа"]
-      },
+      { name: "Chinois",    countries: ["Chine","Taïwan","Singapour"],          wiki: "zh" },
+      { name: "Japonais",   countries: ["Japon"],                               wiki: "ja" },
+      { name: "Coréen",     countries: ["Corée du Sud","Corée du Nord"],        wiki: "ko" },
+      { name: "Mongol",     countries: ["Mongolie"],                            wiki: "mn" },
 
       // — Asie du Sud —
-      {
-        name: "Hindi",
-        countries: ["Inde"],
-        examples: ["नमस्ते दुनिया", "आज मौसम अच्छा है", "मैं हिंदी सीख रहा हूँ", "दिल्ली भारत की राजधानी है", "बहुत धन्यवाद"]
-      },
-      {
-        name: "Bengali",
-        countries: ["Bangladesh", "Inde"],
-        examples: ["হ্যালো বিশ্ব", "আজকের আবহাওয়া ভালো", "আমি বাংলা শিখছি", "ঢাকা বাংলাদেশের রাজধানী", "ধন্যবাদ"]
-      },
-      {
-        name: "Tamoul",
-        countries: ["Inde", "Sri Lanka"],
-        examples: ["வணக்கம் உலகம்", "இன்று வானிலை நல்லது", "நான் தமிழ் கற்றுக்கொள்கிறேன்", "சென்னை ஒரு பெரிய நகரம்", "நன்றி"]
-      },
-      {
-        name: "Télougou",
-        countries: ["Inde"],
-        examples: ["హలో ప్రపంచం", "నేడు వాతావరణం మంచిగా ఉంది", "నేను తెలుగు నేర్చుకుంటున్నాను", "హైదరాబాద్ పెద్ద నగరం", "ధన్యవాదాలు"]
-      },
-      {
-        name: "Gujarati",
-        countries: ["Inde"],
-        examples: ["હેલો વિશ્વ", "આજે હવામાન સારું છે", "હું ગુજરાતી શીખી રહ્યો છું", "અમદાવાદ એક મોટું શહેર છે", "આભાર"]
-      },
+      { name: "Hindi",      countries: ["Inde"],                                wiki: "hi" },
+      { name: "Bengali",    countries: ["Bangladesh","Inde"],                   wiki: "bn" },
+      { name: "Tamoul",     countries: ["Inde"],                                wiki: "ta" },
+      { name: "Singhalais", countries: ["Sri Lanka"],                           wiki: "si" },
 
       // — Asie du Sud-Est —
-      {
-        name: "Thaï",
-        countries: ["Thaïlande"],
-        examples: ["สวัสดีชาวโลก", "วันนี้อากาศดีมาก", "ฉันกำลังเรียนภาษาไทย", "กรุงเทพเป็นเมืองหลวง", "ขอบคุณมาก"]
-      },
-      {
-        name: "Khmer",
-        countries: ["Cambodge"],
-        examples: ["សួស្តីពិភពលោក", "ថ្ងៃនេះអាកាសធាតុល្អ", "ខ្ញុំកំពុងរៀនភាសាខ្មែរ", "ភ្នំពេញជារាជធានី", "អរគុណ"]
-      },
-
-      // — Autres —
+      { name: "Thaï",       countries: ["Thaïlande"],                           wiki: "th" },
+      { name: "Khmer",      countries: ["Cambodge"],                            wiki: "km" },
     ];
 
-    const sampleEl = document.getElementById('sample');
-    const choicesEl = document.getElementById('choices');
+    const sampleEl   = document.getElementById('sample');
+    const choicesEl  = document.getElementById('choices');
     const feedbackEl = document.getElementById('feedback');
-    const nextBtn = document.getElementById('next-btn');
+    const nextBtn    = document.getElementById('next-btn');
 
     function shuffle(arr) {
       const a = [...arr];
@@ -339,56 +207,138 @@
       return a;
     }
 
-    function pick(arr, n) {
-      return shuffle(arr).slice(0, n);
+    function pick(arr, n) { return shuffle(arr).slice(0, n); }
+    function randomLang() { return LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)]; }
+
+    function adjustFontSize(text) {
+      const len = text.length;
+      sampleEl.style.fontSize =
+        len < 25  ? '2.4rem' :
+        len < 60  ? '1.9rem' :
+        len < 120 ? '1.4rem' : '1.1rem';
     }
 
-    function newQuestion() {
+    async function fetchWikiText(lang) {
+      const base = `https://${lang.wiki}.wikipedia.org/w/api.php`;
+      const r1 = await fetch(
+        `${base}?action=query&list=random&rnlimit=1&rnnamespace=0&format=json&origin=*`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      const d1 = await r1.json();
+      const pageId = d1.query.random[0].id;
+
+      const r2 = await fetch(
+        `${base}?action=query&prop=extracts&exsentences=2&exintro=true&explaintext=true&pageids=${pageId}&format=json&origin=*`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      const d2 = await r2.json();
+      const extract = Object.values(d2.query.pages)[0].extract?.trim() ?? '';
+
+      if (extract.length < 15) throw new Error('extract too short');
+
+      if (extract.length > 250) {
+        const cut = extract.slice(0, 250);
+        return cut.slice(0, cut.lastIndexOf(' ')) + '…';
+      }
+      return extract;
+    }
+
+    let prefetched = null;
+    let prefetching = false;
+
+    async function prefetchNext() {
+      if (prefetching) return;
+      prefetching = true;
+      try {
+        const lang = randomLang();
+        const distractors = pick(LANGUAGES.filter(l => l.name !== lang.name), 3);
+        const text = await fetchWikiText(lang);
+        prefetched = { lang, distractors, text };
+      } catch {
+        prefetched = null;
+      }
+      prefetching = false;
+    }
+
+    function renderQuestion({ lang, distractors, text }) {
       feedbackEl.textContent = '';
-      feedbackEl.className = 'feedback';
-      nextBtn.disabled = true;
-      choicesEl.innerHTML = '';
+      feedbackEl.className   = 'feedback';
+      nextBtn.disabled       = true;
+      choicesEl.innerHTML    = '';
 
-      const correctLang = LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)];
-      const example = correctLang.examples[Math.floor(Math.random() * correctLang.examples.length)];
-      sampleEl.textContent = example;
+      sampleEl.className   = 'sample';
+      sampleEl.textContent = text;
+      adjustFontSize(text);
 
-      const distractors = pick(LANGUAGES.filter(l => l.name !== correctLang.name), 3);
-      const options = shuffle([correctLang, ...distractors]);
-
-      options.forEach(lang => {
+      shuffle([lang, ...distractors]).forEach(l => {
         const btn = document.createElement('button');
-        btn.className = 'choice';
-        btn.dataset.lang = lang.name;
+        btn.className    = 'choice';
+        btn.dataset.lang = l.name;
 
         const nameEl = document.createElement('span');
-        nameEl.className = 'choice-name';
-        nameEl.textContent = lang.name;
+        nameEl.className   = 'choice-name';
+        nameEl.textContent = l.name;
 
-        const countriesEl = document.createElement('span');
-        countriesEl.className = 'choice-countries';
-        countriesEl.textContent = lang.countries.join(', ');
+        const cEl = document.createElement('span');
+        cEl.className   = 'choice-countries';
+        cEl.textContent = l.countries.join(', ');
 
         btn.appendChild(nameEl);
-        btn.appendChild(countriesEl);
-        btn.addEventListener('click', () => answer(btn, lang.name, correctLang.name));
+        btn.appendChild(cEl);
+        btn.addEventListener('click', () => answer(btn, l.name, lang.name));
         choicesEl.appendChild(btn);
       });
     }
 
+    async function newQuestion() {
+      nextBtn.disabled       = true;
+      choicesEl.innerHTML    = '';
+      feedbackEl.textContent = '';
+      sampleEl.className     = 'sample loading';
+      sampleEl.textContent   = '···';
+      sampleEl.style.fontSize = '1.6rem';
+
+      if (prefetching) {
+        await new Promise(resolve => {
+          const t = setInterval(() => { if (!prefetching) { clearInterval(t); resolve(); } }, 50);
+        });
+      }
+
+      if (prefetched) {
+        const q = prefetched;
+        prefetched = null;
+        renderQuestion(q);
+        prefetchNext();
+        return;
+      }
+
+      try {
+        const lang = randomLang();
+        const distractors = pick(LANGUAGES.filter(l => l.name !== lang.name), 3);
+        const text = await fetchWikiText(lang);
+        renderQuestion({ lang, distractors, text });
+      } catch {
+        sampleEl.className    = 'sample error';
+        sampleEl.style.fontSize = '0.9rem';
+        sampleEl.textContent  = 'Erreur de chargement — vérifie ta connexion';
+        nextBtn.disabled = false;
+      }
+
+      prefetchNext();
+    }
+
     function answer(clicked, chosen, correct) {
-      const allBtns = choicesEl.querySelectorAll('.choice');
-      allBtns.forEach(b => b.disabled = true);
+      choicesEl.querySelectorAll('.choice').forEach(b => b.disabled = true);
 
       if (chosen === correct) {
         clicked.classList.add('correct');
         feedbackEl.textContent = '✓ Correct !';
-        feedbackEl.className = 'feedback ok';
+        feedbackEl.className   = 'feedback ok';
       } else {
         clicked.classList.add('wrong');
         feedbackEl.textContent = `✗ C'était du ${correct}`;
-        feedbackEl.className = 'feedback ko';
-        allBtns.forEach(b => {
+        feedbackEl.className   = 'feedback ko';
+        choicesEl.querySelectorAll('.choice').forEach(b => {
           if (b.dataset.lang === correct) b.classList.add('reveal');
         });
       }
@@ -397,7 +347,6 @@
     }
 
     nextBtn.addEventListener('click', newQuestion);
-
     newQuestion();
   </script>
 </body>
