@@ -31,15 +31,6 @@
       padding: 1.5rem;
     }
 
-    h1 {
-      font-size: 1.1rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
-
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -163,8 +154,6 @@
         justify-content: flex-start;
       }
 
-      h1 { font-size: 0.85rem; margin-bottom: 0.75rem; }
-
       .card {
         flex: 1;
         min-height: 0;
@@ -186,7 +175,6 @@
   </style>
 </head>
 <body>
-  <h1>Reconnais l'écriture</h1>
   <div class="card">
     <div class="sample loading" id="sample">···</div>
     <div class="question">Dans quelle langue est ce texte ?</div>
@@ -354,7 +342,8 @@
         feedbackEl.className   = 'feedback ok';
       } else {
         clicked.classList.add('wrong');
-        feedbackEl.className   = 'feedback';
+        feedbackEl.textContent = '✗ Incorrect !';
+        feedbackEl.className   = 'feedback ko';
         choicesEl.querySelectorAll('.choice').forEach(b => {
           if (b.dataset.lang === correct) b.classList.add('reveal');
         });
