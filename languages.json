@@ -8,7 +8,6 @@
     ],
     "wiki": "es",
     "group": "latin-west",
-    "chars": "Ñ",
     "tip": "Ñ is unique to Spanish. Spanish uses de and del."
   },
   {
@@ -20,7 +19,6 @@
     ],
     "wiki": "pt",
     "group": "latin-west",
-    "chars": "ãõÃÕ",
     "tip": "Portuguese includes the letters Ç, Ã, Õ, Â, and Ê. Portuguese uses da, do, das and dos."
   },
   {
@@ -32,7 +30,6 @@
     ],
     "wiki": "it",
     "group": "latin-west",
-    "chars": null,
     "tip": "Italian is the most spoken language in Italy. It uses many double consonants, and typically has a very large number of i’s. You can also find ì, é and à. Most words will end with a vowel."
   },
   {
@@ -44,7 +41,6 @@
     ],
     "wiki": "de",
     "group": "latin-west",
-    "chars": "ßÄÖÜ",
     "tip": "The German language uses the special letters Ä, Ö, Ü and ß."
   },
   {
@@ -55,7 +51,6 @@
     ],
     "wiki": "nl",
     "group": "latin-west",
-    "chars": null,
     "tip": "Dutch is a Germanic language. It features a lot of double vowels. Typical letter clusters are ij, ieuw and oe. “IJ“ written as one capitalised letter is also unique to the language."
   },
   {
@@ -65,7 +60,6 @@
     ],
     "wiki": "no",
     "group": "latin-nordic",
-    "chars": "ÆØÅ",
     "tip": "The Norwegian language contains the special letters Æ, Ø and Å."
   },
   {
@@ -76,7 +70,6 @@
     ],
     "wiki": "sv",
     "group": "latin-nordic",
-    "chars": "ÅÄÖ",
     "tip": "The Swedish alphabet contains the special letters Å, Ä and Ö."
   },
   {
@@ -87,7 +80,6 @@
     ],
     "wiki": "da",
     "group": "latin-nordic",
-    "chars": "ÆØÅ",
     "tip": "The Danish alphabet contains these special letters: Æ, Ø, and Å."
   },
   {
@@ -97,7 +89,6 @@
     ],
     "wiki": "fi",
     "group": "latin-nordic",
-    "chars": "äö",
     "tip": "It has a lot of long words and double vowels. The Finnish alphabet includes the letters ä and ö."
   },
   {
@@ -107,7 +98,6 @@
     ],
     "wiki": "is",
     "group": "latin-nordic",
-    "chars": "ðþæÐ",
     "tip": "The Icelandic language contains a couple of unique letters. These are some of the most recognizable ones: ð þ and æ. Vowels can have the following accents: á é í ó ö ú ý. The uppercase version of ð is Ð."
   },
   {
@@ -117,7 +107,6 @@
     ],
     "wiki": "lv",
     "group": "latin-baltic",
-    "chars": "ĀĒĪĢĶĻŅ",
     "tip": "Within the Baltic languages, the following letters are unique to Latvian: Vowels with a macron (horizontal stripe): Ā Ē Ī, consonants with a small hook: Ģ Ķ Ļ Ņ."
   },
   {
@@ -127,7 +116,6 @@
     ],
     "wiki": "lt",
     "group": "latin-baltic",
-    "chars": "ĄĘĮŲĖ",
     "tip": "Within the Baltic languages, the following letters are unique to Lithuanian: Vowels with small hooks: Ą Ę Į Ų, Ė with a single dot."
   },
   {
@@ -137,7 +125,6 @@
     ],
     "wiki": "et",
     "group": "latin-baltic",
-    "chars": "ÄÖÜÕ",
     "tip": "Within the Baltic languages, the following letters are unique to Lithuanian: Vowels with umlauts (two dots): Ä Ö Ü, Õ with a tilde."
   },
   {
@@ -147,7 +134,6 @@
     ],
     "wiki": "ru",
     "group": "cyrillic",
-    "chars": "ыэЫЭ",
     "tip": "The Russian language contains the special letters Ы, Э, Ё (also used in Mongolian) and Ъ (also used in Bulgarian)."
   },
   {
@@ -157,7 +143,6 @@
     ],
     "wiki": "uk",
     "group": "cyrillic",
-    "chars": "іїєґІЇЄҐ",
     "tip": "These letters are unique to Ukrainian, compared to Russian: Є є (not to be confused with Э э in Russian and Belarusian.), Ґ ґ, І і, Ї ї."
   },
   {
@@ -167,7 +152,6 @@
     ],
     "wiki": "bg",
     "group": "cyrillic",
-    "chars": null,
     "tip": "Bulgaria mainly uses the Cyrillic alphabet. However, a lot of signs will also have the Latin alphabet. The letter “Ъ” is only found in Bulgarian and Russian, although it is fairly uncommon in Russian."
   },
   {
@@ -178,7 +162,6 @@
     ],
     "wiki": "sr",
     "group": "cyrillic",
-    "chars": "ћђљњџЋЂЉЊЏ",
     "tip": "These letters are unique to Serbian: Ђ ђ Ћ ћ. These letters are found in Serbian and Macedonian: Љ љ Њ њ Џ џ."
   },
   {
@@ -188,7 +171,6 @@
     ],
     "wiki": "mk",
     "group": "cyrillic",
-    "chars": "ѓѕјќЃЅЈЌ",
     "tip": "The letters ‘Ѓ’ and ‘Ќ’ are unique to Macedonian. ‘Љ’, ‘Њ’, and ‘Џ’ are only in Serbian and Macedonian."
   },
   {
@@ -198,7 +180,6 @@
     ],
     "wiki": "mn",
     "group": "cyrillic",
-    "chars": null,
     "tip": "Mongolian Cyrillic contains the letters Ɵ and Ү (also exist in the Kyrgyz and Kazakh languages), which do not exist in the Russian alphabet. Additionally, the use of double vowels, such as aa, ƟƟ or ЭЭ, is common in Mongolian."
   },
   {
@@ -208,7 +189,6 @@
     ],
     "wiki": "kk",
     "group": "cyrillic",
-    "chars": "ғқұҒҚҰ",
     "tip": "Kazakhstan uses both Cyrillic and Latin alphabets. The following letters are found in the Kazakh but not Russian alphabet: Ә (Ä), Ғ (Ǵ), Қ (Q), Ң (Ń), Ө (Ö), Ұ (W), Ү (Ü), Һ (H), І (I). Kazakh is related to Turkish, so the Latin text can appear similar."
   },
   {
@@ -218,7 +198,6 @@
     ],
     "wiki": "ky",
     "group": "cyrillic",
-    "chars": null,
     "tip": "The Cyrillic script used for Kyrgyz includes additional characters not found in Russian Cyrillic, such as: Ө Ү Ң."
   },
   {
@@ -228,7 +207,6 @@
     ],
     "wiki": "pl",
     "group": "latin-eeurope",
-    "chars": "łńśźżŁŃŚŹŻ",
     "tip": "The Polish alphabet includes: Ł Ż Ń Ć Ó (unique to Polish); Ą Ę (also found in Lithuanian); Ś, Ź (also found in Montenegrin). Polish does not use V, instead, it uses W a lot, the only Slavic language to do so. Other unusually common consonants are the Z, K, and C."
   },
   {
@@ -238,7 +216,6 @@
     ],
     "wiki": "cs",
     "group": "latin-eeurope",
-    "chars": "řěůŘĚŮ",
     "tip": "Czech uses the letters Ř, Ě and Ů;"
   },
   {
@@ -248,7 +225,6 @@
     ],
     "wiki": "sk",
     "group": "latin-eeurope",
-    "chars": "ľĺŕôĽĹŔÔ",
     "tip": "Slovak uses the letters Ľ, Ô, Ä, Ŕ and Ĺ."
   },
   {
@@ -258,7 +234,6 @@
     ],
     "wiki": "hr",
     "group": "latin-eeurope",
-    "chars": "ćđĆĐ",
     "tip": "ć et đ sont uniques au croate latin. Attention : č et ć sont deux lettres distinctes !"
   },
   {
@@ -268,7 +243,6 @@
     ],
     "wiki": "sl",
     "group": "latin-eeurope",
-    "chars": null,
     "tip": "č, š, ž seulement, le plus sobre des slaves latins."
   },
   {
@@ -279,7 +253,6 @@
     ],
     "wiki": "ro",
     "group": "latin-eeurope",
-    "chars": "ăâîșțĂÂÎȘȚ",
     "tip": "Romanian is a Romance language similar to Italian, containing the following special letters: Ă ă Ș ș Ț ț Î î."
   },
   {
@@ -291,7 +264,6 @@
     ],
     "wiki": "hu",
     "group": "latin-eeurope",
-    "chars": "őűŐŰ",
     "tip": "The Hungarian language has a unique look, with a very large number of acute accents, umlauts over o’s, and long words. The letters Ő and Ű, with double acute accents, are unique to the language."
   },
   {
@@ -301,7 +273,6 @@
     ],
     "wiki": "sq",
     "group": "latin-eeurope",
-    "chars": "ëË",
     "tip": "Words often contain the letter Ë, ë, and sometimes Ç ç."
   },
   {
@@ -311,7 +282,6 @@
     ],
     "wiki": "mt",
     "group": "latin-eeurope",
-    "chars": "ħġċĦĠĊ",
     "tip": "Maltese uses the Latin script, but with unique letters, which include: Ċ ċ Ġ ġ Ħ ħ Ż ż."
   },
   {
@@ -321,7 +291,6 @@
     ],
     "wiki": "tr",
     "group": "latin-eeurope",
-    "chars": "ığşİĞŞ",
     "tip": "The Turkish language has a fairly unique look. It uses the following special characters: Ç ç and Ş ş with a cedilla; Ö ö and Ü ü with an umlaut ; Ğ ğ with a breve; otless I ı; Capital İ with a dot."
   },
   {
@@ -332,7 +301,6 @@
     ],
     "wiki": "el",
     "group": "grec",
-    "chars": null,
     "tip": "Alphabet grec — repère α, β, γ, δ, ω, π, σ, λ, θ, φ"
   },
   {
@@ -344,7 +312,6 @@
     ],
     "wiki": "ar",
     "group": "abjad",
-    "chars": null,
     "tip": "Écriture cursive de droite à gauche, points sous/sur les lettres — pas de majuscules"
   },
   {
@@ -354,7 +321,6 @@
     ],
     "wiki": "he",
     "group": "abjad",
-    "chars": null,
     "tip": "Lettres carrées de droite à gauche — moins cursif que l'arabe, peu de points diacritiques visibles"
   },
   {
@@ -366,7 +332,6 @@
     ],
     "wiki": "zh",
     "group": "east-asian",
-    "chars": null,
     "tip": "Caractères complexes (hanzi) seuls — pas de hiragana/katakana (japonais) ni de hangul (coréen)"
   },
   {
@@ -376,7 +341,6 @@
     ],
     "wiki": "ja",
     "group": "east-asian",
-    "chars": null,
     "tip": "Mélange de hiragana (courbé, ひらがな), katakana (anguleux, カタカナ) et kanji — toujours les trois ensemble"
   },
   {
@@ -386,7 +350,6 @@
     ],
     "wiki": "ko",
     "group": "east-asian",
-    "chars": null,
     "tip": "Blocs carrés avec cercles et lignes (hangul) — 한글 très reconnaissable, aucun caractère commun avec le chinois"
   },
   {
@@ -396,7 +359,6 @@
     ],
     "wiki": "hi",
     "group": "south-asian",
-    "chars": null,
     "tip": "Barre horizontale (shirorékha) relie les lettres par le haut — script Devanagari"
   },
   {
@@ -406,7 +368,6 @@
     ],
     "wiki": "ne",
     "group": "south-asian",
-    "chars": null,
     "tip": "Même script Devanagari que le hindi — quasiment indistinguable visuellement, contexte géographique décisif"
   },
   {
@@ -417,7 +378,6 @@
     ],
     "wiki": "bn",
     "group": "south-asian",
-    "chars": null,
     "tip": "Barre horizontale comme le Devanagari mais lettres plus rondes et pendantes sous la ligne"
   },
   {
@@ -427,7 +387,6 @@
     ],
     "wiki": "dz",
     "group": "south-asian",
-    "chars": null,
     "tip": "Script tibétain — lettres empilées verticalement, aspect très différent du Devanagari"
   },
   {
@@ -437,7 +396,6 @@
     ],
     "wiki": "si",
     "group": "south-asian",
-    "chars": null,
     "tip": "Grandes boucles rondes et fermées — encore plus circulaire que le tamoul, lettres très compactes"
   },
   {
@@ -447,7 +405,6 @@
     ],
     "wiki": "th",
     "group": "southeast-asian",
-    "chars": null,
     "tip": "Petites spirales sur les lettres, tons marqués au-dessus — plus ornemental et complexe que le laotien"
   },
   {
@@ -457,7 +414,6 @@
     ],
     "wiki": "lo",
     "group": "southeast-asian",
-    "chars": null,
     "tip": "Similaire au thaï mais lettres plus rondes et moins ornées — moins de diacritiques au-dessus"
   },
   {
@@ -467,7 +423,6 @@
     ],
     "wiki": "km",
     "group": "southeast-asian",
-    "chars": null,
     "tip": "Lettres très complexes avec sous-scripts — aspect plus anguleux et dense que le thaï et le laotien"
   },
   {
@@ -477,7 +432,6 @@
     ],
     "wiki": "vi",
     "group": "latin-sea",
-    "chars": "ắằẳẵặấầẩẫậếềểễệốồổỗộớờởỡợứừửữựỳỵỷỹ",
     "tip": "Diacritiques empilés uniques au monde (ắ, ề, ộ) — deux signes superposés sur une même lettre, aucune autre langue ne fait ça"
   },
   {
@@ -487,7 +441,6 @@
     ],
     "wiki": "id",
     "group": "latin-sea",
-    "chars": null,
     "tip": "Latin standard sans diacritiques — ng, ny fréquents, mots souvent courts"
   },
   {
@@ -497,7 +450,6 @@
     ],
     "wiki": "ms",
     "group": "latin-sea",
-    "chars": null,
     "tip": "Quasi identique à l'indonésien — ng, ny, kh fréquents, très difficile à distinguer"
   }
 ]

@@ -112,8 +112,6 @@
     .feedback.ok { color: var(--correct); font-weight: 600; }
     .feedback.ko { color: var(--wrong);   font-weight: 600; }
 
-    ::highlight(quiz-hl) { color: #fbbf24; font-weight: 700; }
-
     #tip {
       font-size: 1rem;
       color: var(--muted);
@@ -224,47 +222,15 @@
         len < 120 ? '1.4rem' : '1.1rem';
     }
 
-    function extractWindow(text, chars) {
-      const WINDOW = 220;
-      if (chars) {
-        const positions = [];
-        [...text].forEach((c, i) => { if (chars.includes(c)) positions.push(i); });
-        if (positions.length > 0) {
-          const idx = positions[Math.floor(Math.random() * positions.length)];
-          const start = Math.max(0, idx - 90);
-          let win = text.slice(start, start + WINDOW);
-          if (start > 0) {
-            const sp = win.indexOf(' ');
-            if (sp !== -1 && sp < 25) win = win.slice(sp + 1);
-          }
-          if (start + WINDOW < text.length) {
-            const sp = win.lastIndexOf(' ');
-            if (sp !== -1) win = win.slice(0, sp) + '…';
-          }
-          return win;
-        }
-      }
-      if (text.length <= WINDOW) return text;
-      const cut = text.slice(0, WINDOW);
-      return cut.slice(0, cut.lastIndexOf(' ')) + '…';
-    }
-
-    function applyHighlight(chars) {
-      CSS.highlights?.delete('quiz-hl');
-      if (!chars || !CSS.highlights) return;
-      const textNode = sampleEl.firstChild;
-      if (!textNode) return;
-      const text = textNode.textContent;
-      const ranges = [];
-      for (let i = 0; i < text.length; i++) {
-        if (chars.includes(text[i])) {
-          const r = new Range();
-          r.setStart(textNode, i);
-          r.setEnd(textNode, i + 1);
-          ranges.push(r);
-        }
-      }
-      if (ranges.length) CSS.highlights.set('quiz-hl', new Highlight(...ranges));
+    function extractWindow(text) {
+      const WORDS = 30;
+      const words = text.split(/\s+/).filter(Boolean);
+      if (words.length <= WORDS) return words.join(' ');
+      const start = Math.floor(Math.random() * (words.length - WORDS + 1));
+      let win = words.slice(start, start + WORDS).join(' ');
+      if (start > 0) win = '…' + win;
+      if (start + WORDS < words.length) win = win + '…';
+      return win;
     }
 
     async function fetchWikiText(lang) {
@@ -276,7 +242,7 @@
       const d = await r.json();
       const extract = Object.values(d.query.pages)[0].extract?.trim() ?? '';
       if (extract.length < 15) throw new Error('extract too short');
-      return extractWindow(extract, lang.chars ?? null);
+      return extractWindow(extract);
     }
 
     let prefetched = null;
@@ -297,7 +263,6 @@
     }
 
     function renderQuestion({ lang, distractors, text }) {
-      CSS.highlights?.delete('quiz-hl');
       feedbackEl.textContent = '';
       feedbackEl.className   = 'feedback';
       tipEl.style.display    = 'none';
@@ -386,8 +351,6 @@
           tipEl.style.display = 'block';
         }
       }
-
-      applyHighlight(correctLang?.chars ?? null);
 
       nextBtn.disabled = false;
     }
